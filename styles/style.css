@@ -1,0 +1,84 @@
+div#chess-board {
+    display: grid;
+    grid-template: repeat(8,1fr)/repeat(8,1fr);
+    border: solid black 2px;
+    height: 560px;
+    width: 560px;
+}
+
+/* div.pos-11 {
+    
+} */
+
+div.bp {
+    background-image: url("../images/pawn.png");
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+}
+div.br {
+    background-image: url("../images/pawn.png");
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+}
+div.bn {
+    background-image: url("../images/pawn.png");
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+}
+div.bb {
+    background-image: url("../images/pawn.png");
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+}
+div.bq {
+    background-image: url("../images/pawn.png");
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+}
+div.bk {
+    background-image: url("../images/pawn.png");
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+}
+div.wp {
+    background-image: url("../images/whitePawn.png");
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+}
+div.wr {
+    background-image: url("../images/whiteRook.png");
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+}
+div.wn {
+    background-image: url("../images/whiteKnight.png");
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+}
+div.wb {
+    background-image: url("../images/whiteBishop.png");
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+}
+div.wq {
+    background-image: url("../images/whiteQueen.png");
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+}
+div.wk {
+    background-image: url("../images/whiteKing.png");
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+}
