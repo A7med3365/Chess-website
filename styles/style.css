@@ -82,3 +82,10 @@ div.wk {
     background-repeat: no-repeat;
     background-position: center;
 }
+div.mv {
+    background-image: url("../images/mv.png");
+    background-size: 40%;
+    background-repeat: no-repeat;
+    background-position: center;
+    opacity:0.5 ;
+}

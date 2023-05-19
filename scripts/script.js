@@ -21,32 +21,42 @@ const piecesTypes = [       //chess pieces types
 
 function gameInit() { //initlizing the game, putting every piece in the starting position. only white for now
     
-    for (let i = 1; i <= 8; i++) { addPiece(`pos-2${i}`,'wp') }
-    addPiece(`pos-11`,'wr')
-    addPiece(`pos-18`,'wr')
-    addPiece(`pos-12`,'wn')
-    addPiece(`pos-17`,'wn')
-    addPiece(`pos-13`,'wb')
-    addPiece(`pos-16`,'wb')
-    addPiece(`pos-14`,'wq')
-    addPiece(`pos-15`,'wk')
+    for (let i = 1; i <= 8; i++) { addPiece(`.pos-2${i}`,'wp') }
+    addPiece(`.pos-11`,'wr')
+    addPiece(`.pos-18`,'wr')
+    addPiece(`.pos-12`,'wn')
+    addPiece(`.pos-17`,'wn')
+    addPiece(`.pos-13`,'wb')
+    addPiece(`.pos-16`,'wb')
+    addPiece(`.pos-14`,'wq')
+    addPiece(`.pos-15`,'wk')
 }
-
+ 
 
 function addEvent(piece) {  //this will add onClick event on all pieces of type *piece*, might add a position input to target one piece
-    $(`.${piece}`).on('click',function(){
 
-        const piece = event.target.classList[1]
-        const pos = event.target.classList[0]
-        console.log(pos);
+
+    $(`.${piece}`).on('click',function(e){
+
+        
+
+        const piece = e.target.classList[1]
+        const pos = e.target.classList[0]
+        //console.log(pos)
+        
+        chessPiecesMoves[piece](pos)
+        
+        
+        //console.log(piece);
         //console.log(piece,pos.split("-")[1][0]);
 
-        posx = pos.split("-")[1][1]
-        posy = pos.split("-")[1][0]
-        newPos="pos-"+String(Number(posy)+1)+posx
-        console.log(newPos);
-        console.log(posx,posy);
-        movePiece(pos,newPos,piece)
+        
+        // console.log(pos);
+        // let [posx,posy] = getXY(pos)
+        // newPos="pos-"+String(Number(posy)+1)+posx
+        // console.log(newPos);
+        // console.log(posx,posy);
+        // movePiece(pos,newPos,piece)
         
     })
 }
@@ -60,13 +70,13 @@ function addEventAll() { //this will add onClick event on all pieces on the boar
 
 function removePiece(pos,piece) {       //remove a piece of type *piece* in the positon *pos*
     console.log(2);
-    $(`.${pos}`).removeClass(piece)
+    $(pos).removeClass(piece)
     //console.log($(pos));
 }
 
 function addPiece(pos,piece) {          //add a piece of type *piece* in the positon *pos*
     //console.log(3);
-    $(`.${pos}`).addClass(piece)
+    $(pos).addClass(piece)
 }
 
 function movePiece(from, to, piece){    //move a piece of type *piece* 
@@ -74,18 +84,51 @@ function movePiece(from, to, piece){    //move a piece of type *piece*
     removePiece(from,piece)
     addPiece(to,piece)
     addEvent(piece)
+    $('.mv').removeClass("mv").off('click') //clear the previous displayed moves
 }
 
-
-function possibleMove(pos) {        //this will display a possible move on the board at *pos*
+function displayMoves(moves ,currPos, piece) {
     
+    $('.mv').removeClass("mv").off('click') //clear the previous displayed moves
+
+    for (const move of moves) {
+        const pos = ".pos-" + String(move.y)+String(move.x)
+        console.log(pos);
+        
+        possibleMove(pos,currPos, piece)
+    }
+
 }
 
-function addEventPossibleMove(pos) {    //this will add en event for the possible move, onClick -> movePiece to the clicked position
+function possibleMove(pos,currPos, piece) {        //this will display a possible move on the board at *pos*
     
+    $(pos).addClass("mv")
+    addEventPossibleMove(pos,currPos, piece)
+}
+
+function addEventPossibleMove(newPos,currPos, piece) {    //this will add en event for the possible move, onClick -> movePiece to the clicked position
+    
+    console.log("hi");
+
+    $(`.mv${newPos}`).on('click',function(e){
+
+        let from = currPos
+        let to = newPos
+
+        console.log(from,to);
+
+        movePiece('.'+from, to, piece)
+
+    })
 }
 
 
+function getXY(pos) {
+    console.log(pos);
+    let x = Number(pos[5])
+    let y = Number(pos[4])
+    return [x,y]
+}
 
 
 /*
@@ -93,40 +136,63 @@ function addEventPossibleMove(pos) {    //this will add en event for the possibl
 */
 
 
-function whitePawn() {
+function whitePawn(pos) { 
+
+    moves=[]
+
+    //console.log(pos);
+    let [posx,posy] = getXY(pos)
+    //console.log(typeof(x),x,y)
+
+    moves.push({
+        x:posx,
+        y:posy+1
+    })
+    
+     if (posy == 2) {
+        moves.push({
+            x:posx,
+            y:posy+2
+        })
+     }
+
+     displayMoves(moves,pos,'wp');
+
+
+
 
 }
-function blackPawn() {
+function blackPawn(pos) {
 
 }
-function whiteRook() {
+function whiteRook(pos) {
 
 }
-function blackRook() {
+function blackRook(pos) {
 
 }
-function whiteKnight() {
+function whiteKnight(pos) {
 
 }
-function blackKnight() {
+function blackKnight(pos) {
 
 }
-function whiteBishop() {
+function whiteBishop(pos) {
 
 }
-function blackBishop() {
+function blackBishop(pos) {
 
 }
-function whiteQueen() {
+function whiteQueen(pos) {
 
 }
-function blackQueen() {
+function blackQueen(pos) {
 
 }
-function whiteKing() {
+function whiteKing(pos) {
 
 }
-function blackKing() {
+function blackKing(pos) {
 
 }
 
@@ -208,4 +274,6 @@ for (let i = 8; i >= 1; i--) {
     gameInit()
 
     addEventAll()
-    chessPiecesMoves.bb()
+
+    //movePiece("pos-22.wp",'pos-32','wp')
+    
