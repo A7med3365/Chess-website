@@ -71,16 +71,18 @@ function addEventAll() { //this will add onClick event on all pieces on the boar
 function removePiece(pos,piece) {       //remove a piece of type *piece* in the positon *pos*
     console.log(2);
     $(pos).removeClass(piece)
+    $(pos).attr('value','empty')
     //console.log($(pos));
 }
 
 function addPiece(pos,piece) {          //add a piece of type *piece* in the positon *pos*
     //console.log(3);
     $(pos).addClass(piece)
+    $(pos).attr('value',piece[0])
 }
 
 function movePiece(from, to, piece){    //move a piece of type *piece* 
-    console.log(1);
+    //console.log(1);
     removePiece(from,piece)
     addPiece(to,piece)
 
@@ -89,18 +91,21 @@ function movePiece(from, to, piece){    //move a piece of type *piece*
     
 }
 
-function displayMoves(moves ,currPos, piece) {
+function displayMoves(moves ,currPos, piece, clear = true) {
     
-    $('.mv').removeClass("mv").off('click') //clear the previous displayed moves
-    addEventAll()
+    if (clear) {
+        chessPiecesMoves.clearMoves()
+    }
 
     for (const move of moves) {
 
         const pos = ".pos-" + String(move.y)+String(move.x)
 
-        console.log(pos);
-        
-        $(pos).addClass("mv")
+        //console.log(pos);
+
+        if ($(pos).attr('value')=='empty') {
+
+            $(pos).addClass("mv")
 
         $(`.mv${pos}`).on('click',function(e){       //this will add en event for the possible move, onClick -> movePiece to the clicked position
 
@@ -112,20 +117,64 @@ function displayMoves(moves ,currPos, piece) {
             movePiece('.'+from, to, piece)
     
         })
-
-        
+        }
+                
     }
 
 }
 
+function resCheck(x,y) {
+    const pos = ".pos-" + String(y)+String(x)
+    if ($(pos).attr('value')=='empty'){
+        return false
+    } else {
+        return true
+    }
+}
 
 
 function getXY(pos) {
-    console.log(pos);
+    //console.log(pos);
     let x = Number(pos[5])
     let y = Number(pos[4])
     return [x,y]
 }
+
+
+
+
+function roll(posx,posy,dir) {
+        
+    moves = []
+
+    const dx = dir[0]
+    const dy = dir[1]
+
+    let x = posx + dx
+    let y = posy + dy
+
+    while (x >= 1 && x <= 8 && y >= 1 && y <= 8) {  //the condition will keep us inside the board
+
+        moves.push({        //add the next possible position
+            'x': x,
+            'y': y
+        })
+        
+        if (resCheck(x,y)) { break } //break if we reach another piece
+
+        x += dx         //increment in the desired direction
+        y += dy         //increment in the desired direction
+    }
+    
+
+    console.log(moves);
+    return moves
+}
+
+
+
+
+
 
 
 /*
@@ -180,59 +229,45 @@ function blackPawn(pos) {
 }
 
 function whiteRook(pos) {
-    moves = [];
+    
 
     let [posx, posy] = getXY(pos);
 
-    // Horizontal moves
-    for (let i = 1; i <= 8; i++) {
-        if (i !== posx) {
-            moves.push({
-                x: i,
-                y: posy
-            });
-        }
-    }
+    const moves = [
+        roll(posx,posy,chessPiecesMoves.right), //Horizontal Right 
+        roll(posx,posy,chessPiecesMoves.left), //Horizontal left
+        roll(posx,posy,chessPiecesMoves.up), //vertical upward
+        roll(posx,posy,chessPiecesMoves.down), //vertical downward
+    ]
+    
 
-    // Vertical moves
-    for (let i = 1; i <= 8; i++) {
-        if (i !== posy) {
-            moves.push({
-                x: posx,
-                y: i
-            });
-        }
-    }
+    chessPiecesMoves.clearMoves()
 
-    displayMoves(moves, pos, 'wr');
+    for (const mv of moves) {
+        displayMoves(mv, pos, 'wr', false);
+    }
+    
+        
 }
 
 function blackRook(pos) {
-    moves = [];
 
     let [posx, posy] = getXY(pos);
 
-    // Horizontal moves
-    for (let i = 1; i <= 8; i++) {
-        if (i !== posx) {
-            moves.push({
-                x: i,
-                y: posy
-            });
-        }
+    const moves = [
+        roll(posx,posy,chessPiecesMoves.right), //Horizontal Right 
+        roll(posx,posy,chessPiecesMoves.left), //Horizontal left
+        roll(posx,posy,chessPiecesMoves.up), //vertical upward
+        roll(posx,posy,chessPiecesMoves.down), //vertical downward
+    ]
+    
+
+    chessPiecesMoves.clearMoves()
+
+    for (const mv of moves) {
+        displayMoves(mv, pos, 'br', false);
     }
 
-    // Vertical moves
-    for (let i = 1; i <= 8; i++) {
-        if (i !== posy) {
-            moves.push({
-                x: posx,
-                y: i
-            });
-        }
-    }
-
-    displayMoves(moves, pos, 'br');
 }
 
 function whiteKnight(pos) {
@@ -279,188 +314,93 @@ function blackKnight(pos) {
     displayMoves(moves, pos, 'bn');
 }
 
+
 function whiteBishop(pos) {
-    moves = [];
 
     let [posx, posy] = getXY(pos);
 
-    // Diagonal moves
-    for (let i = 1; i <= 8; i++) {
-        if (posx + i <= 8 && posy + i <= 8) {
-            moves.push({
-                x: posx + i,
-                y: posy + i
-            });
-        }
-        if (posx - i >= 1 && posy - i >= 1) {
-            moves.push({
-                x: posx - i,
-                y: posy - i
-            });
-        }
-        if (posx + i <= 8 && posy - i >= 1) {
-            moves.push({
-                x: posx + i,
-                y: posy - i
-            });
-        }
-        if (posx - i >= 1 && posy + i <= 8) {
-            moves.push({
-                x: posx - i,
-                y: posy + i
-            });
-        }
-    }
+    const moves = [
+        roll(posx,posy,chessPiecesMoves.topRight), //Diagonal Top Right 
+        roll(posx,posy,chessPiecesMoves.topLeft), //Diagonal Top left
+        roll(posx,posy,chessPiecesMoves.bottomRight), //Diagonal Bottom Right
+        roll(posx,posy,chessPiecesMoves.bottomLeft), //vDiagonal Bottom leftt
+    ]
+    
 
-    displayMoves(moves, pos, 'wb');
+    chessPiecesMoves.clearMoves()
+
+    for (const mv of moves) {
+        displayMoves(mv, pos, 'wb', false);
+    }
+    
 }
 
 function blackBishop(pos) {
-    moves = [];
-
+    
     let [posx, posy] = getXY(pos);
 
-    // Diagonal moves
-    for (let i = 1; i <= 8; i++) {
-        if (posx + i <= 8 && posy + i <= 8) {
-            moves.push({
-                x: posx + i,
-                y: posy + i
-            });
-        }
-        if (posx - i >= 1 && posy - i >= 1) {
-            moves.push({
-                x: posx - i,
-                y: posy - i
-            });
-        }
-        if (posx + i <= 8 && posy - i >= 1) {
-            moves.push({
-                x: posx + i,
-                y: posy - i
-            });
-        }
-        if (posx - i >= 1 && posy + i <= 8) {
-            moves.push({
-                x: posx - i,
-                y: posy + i
-            });
-        }
+    const moves = [
+        roll(posx,posy,chessPiecesMoves.topRight), //Diagonal Top Right 
+        roll(posx,posy,chessPiecesMoves.topLeft), //Diagonal Top left
+        roll(posx,posy,chessPiecesMoves.bottomRight), //Diagonal Bottom Right
+        roll(posx,posy,chessPiecesMoves.bottomLeft), //vDiagonal Bottom leftt
+    ]
+    
+
+    chessPiecesMoves.clearMoves()
+
+    for (const mv of moves) {
+        displayMoves(mv, pos, 'bb', false);
     }
 
-    displayMoves(moves, pos, 'bb');
 }
 
 function whiteQueen(pos) {
-    moves = [];
-
+    
     let [posx, posy] = getXY(pos);
 
-    // Horizontal moves
-    for (let i = 1; i <= 8; i++) {
-        if (i !== posx) {
-            moves.push({
-                x: i,
-                y: posy
-            });
-        }
+    const moves = [
+        roll(posx,posy,chessPiecesMoves.right), //Horizontal Right 
+        roll(posx,posy,chessPiecesMoves.left), //Horizontal left
+        roll(posx,posy,chessPiecesMoves.up), //vertical upward
+        roll(posx,posy,chessPiecesMoves.down), //vertical downward
+        roll(posx,posy,chessPiecesMoves.topRight), //Diagonal Top Right 
+        roll(posx,posy,chessPiecesMoves.topLeft), //Diagonal Top left
+        roll(posx,posy,chessPiecesMoves.bottomRight), //Diagonal Bottom Right
+        roll(posx,posy,chessPiecesMoves.bottomLeft), //vDiagonal Bottom leftt
+    ]
+    
+
+    chessPiecesMoves.clearMoves()
+
+    for (const mv of moves) {
+        displayMoves(mv, pos, 'wq', false);
     }
 
-    // Vertical moves
-    for (let i = 1; i <= 8; i++) {
-        if (i !== posy) {
-            moves.push({
-                x: posx,
-                y: i
-            });
-        }
-    }
-
-    // Diagonal moves
-    for (let i = 1; i <= 8; i++) {
-        if (posx + i <= 8 && posy + i <= 8) {
-            moves.push({
-                x: posx + i,
-                y: posy + i
-            });
-        }
-        if (posx - i >= 1 && posy - i >= 1) {
-            moves.push({
-                x: posx - i,
-                y: posy - i
-            });
-        }
-        if (posx + i <= 8 && posy - i >= 1) {
-            moves.push({
-                x: posx + i,
-                y: posy - i
-            });
-        }
-        if (posx - i >= 1 && posy + i <= 8) {
-            moves.push({
-                x: posx - i,
-                y: posy + i
-            });
-        }
-    }
-
-    displayMoves(moves, pos, 'wq');
 }
 
 function blackQueen(pos) {
-    moves = [];
-
+   
     let [posx, posy] = getXY(pos);
 
-    // Horizontal moves
-    for (let i = 1; i <= 8; i++) {
-        if (i !== posx) {
-            moves.push({
-                x: i,
-                y: posy
-            });
-        }
+    const moves = [
+        roll(posx,posy,chessPiecesMoves.right), //Horizontal Right 
+        roll(posx,posy,chessPiecesMoves.left), //Horizontal left
+        roll(posx,posy,chessPiecesMoves.up), //vertical upward
+        roll(posx,posy,chessPiecesMoves.down), //vertical downward
+        roll(posx,posy,chessPiecesMoves.topRight), //Diagonal Top Right 
+        roll(posx,posy,chessPiecesMoves.topLeft), //Diagonal Top left
+        roll(posx,posy,chessPiecesMoves.bottomRight), //Diagonal Bottom Right
+        roll(posx,posy,chessPiecesMoves.bottomLeft), //vDiagonal Bottom leftt
+    ]
+    
+
+    chessPiecesMoves.clearMoves()
+
+    for (const mv of moves) {
+        displayMoves(mv, pos, 'bq', false);
     }
 
-    // Vertical moves
-    for (let i = 1; i <= 8; i++) {
-        if (i !== posy) {
-            moves.push({
-                x: posx,
-                y: i
-            });
-        }
-    }
-
-    // Diagonal moves
-    for (let i = 1; i <= 8; i++) {
-        if (posx + i <= 8 && posy + i <= 8) {
-            moves.push({
-                x: posx + i,
-                y: posy + i
-            });
-        }
-        if (posx - i >= 1 && posy - i >= 1) {
-            moves.push({
-                x: posx - i,
-                y: posy - i
-            });
-        }
-        if (posx + i <= 8 && posy - i >= 1) {
-            moves.push({
-                x: posx + i,
-                y: posy - i
-            });
-        }
-        if (posx - i >= 1 && posy + i <= 8) {
-            moves.push({
-                x: posx - i,
-                y: posy + i
-            });
-        }
-    }
-
-    displayMoves(moves, pos, 'bq');
 }
 
 function whiteKing(pos) {
@@ -515,6 +455,10 @@ function blackKing(pos) {
 */
 
 const chessPiecesMoves = {
+    clearMoves: function(){
+        $('.mv').removeClass("mv").off('click') //clear the previous displayed moves
+        addEventAll()
+    },
     wp: whitePawn,
     bp: blackPawn,
     wr: whiteRook,
@@ -526,11 +470,19 @@ const chessPiecesMoves = {
     wq: whiteQueen,
     bq: blackQueen,
     wk: whiteKing,
-    bk: blackKing
+    bk: blackKing,
+    right:[1, 0],
+    left:[-1, 0],
+    up:[0, 1],
+    down:[0, -1],
+    topRight: [1,1],
+    topLeft: [-1,1],
+    bottomRight: [1,-1],
+    bottomLeft: [-1,-1]
   };
   
 
-
+  
 
 
 
@@ -543,7 +495,7 @@ const chessBoard = $('#chess-board')
 for (let i = 8; i >= 1; i--) {
 
     for (let j = 1; j <= 8; j++) {
-        chessBoard.append(`<div class='pos-${i}${j}'></div>`)
+        chessBoard.append(`<div class='pos-${i}${j}' value="empty"></div>`)
         const currentBox = $(`.pos-${i}${j}`)
 
         if ((j % 2 == 0 && i % 2 == 0)||(j % 2 == 1 && i % 2 == 1)) {
@@ -583,9 +535,38 @@ for (let i = 8; i >= 1; i--) {
 
     // })
 
-    gameInit()
+    //gameInit()
+
+    addPiece(`.pos-53`,'wq')
+    addPiece(`.pos-56`,'wb ')
+
+    
 
     addEventAll()
 
     //movePiece("pos-22.wp",'pos-32','wp')
+
+    // function roll(dir,posx,posy) {
+        
+    //     moves = []
+    //     for (let i = 1; i <= 8; i++) {
+
+    //         if ((dir == 'h') && (i !== posx)) {
+    //             moves.push({
+    //                 x: i,
+    //                 y: posy
+    //             });
+
+    //         } else if ((dir == 'v') && (i !== posy)) {
+    //             moves.push({
+    //                 x: posx,
+    //                 y: i
+    //             });
+    //         }
+    //     }
+
+    //     console.log(moves);
+    //     return moves
+    // }
+    
     
