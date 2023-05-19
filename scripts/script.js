@@ -83,44 +83,41 @@ function movePiece(from, to, piece){    //move a piece of type *piece*
     console.log(1);
     removePiece(from,piece)
     addPiece(to,piece)
-    addEvent(piece)
+
     $('.mv').removeClass("mv").off('click') //clear the previous displayed moves
+    addEvent(piece)
+    
 }
 
 function displayMoves(moves ,currPos, piece) {
     
     $('.mv').removeClass("mv").off('click') //clear the previous displayed moves
+    addEventAll()
 
     for (const move of moves) {
+
         const pos = ".pos-" + String(move.y)+String(move.x)
+
         console.log(pos);
         
-        possibleMove(pos,currPos, piece)
+        $(pos).addClass("mv")
+
+        $(`.mv${pos}`).on('click',function(e){       //this will add en event for the possible move, onClick -> movePiece to the clicked position
+
+            let from = currPos
+            let to = pos
+    
+            console.log(from,to);
+    
+            movePiece('.'+from, to, piece)
+    
+        })
+
+        
     }
 
 }
 
-function possibleMove(pos,currPos, piece) {        //this will display a possible move on the board at *pos*
-    
-    $(pos).addClass("mv")
-    addEventPossibleMove(pos,currPos, piece)
-}
-
-function addEventPossibleMove(newPos,currPos, piece) {    //this will add en event for the possible move, onClick -> movePiece to the clicked position
-    
-    console.log("hi");
-
-    $(`.mv${newPos}`).on('click',function(e){
-
-        let from = currPos
-        let to = newPos
-
-        console.log(from,to);
-
-        movePiece('.'+from, to, piece)
-
-    })
-}
 
 
 function getXY(pos) {
@@ -163,38 +160,353 @@ function whitePawn(pos) {
 
 }
 function blackPawn(pos) {
+    moves = [];
 
+    let [posx, posy] = getXY(pos);
+
+    moves.push({
+        x: posx,
+        y: posy - 1
+    });
+
+    if (posy == 7) {
+        moves.push({
+            x: posx,
+            y: posy - 2
+        });
+    }
+
+    displayMoves(moves, pos, 'bp');
 }
+
 function whiteRook(pos) {
+    moves = [];
 
+    let [posx, posy] = getXY(pos);
+
+    // Horizontal moves
+    for (let i = 1; i <= 8; i++) {
+        if (i !== posx) {
+            moves.push({
+                x: i,
+                y: posy
+            });
+        }
+    }
+
+    // Vertical moves
+    for (let i = 1; i <= 8; i++) {
+        if (i !== posy) {
+            moves.push({
+                x: posx,
+                y: i
+            });
+        }
+    }
+
+    displayMoves(moves, pos, 'wr');
 }
+
 function blackRook(pos) {
+    moves = [];
 
+    let [posx, posy] = getXY(pos);
+
+    // Horizontal moves
+    for (let i = 1; i <= 8; i++) {
+        if (i !== posx) {
+            moves.push({
+                x: i,
+                y: posy
+            });
+        }
+    }
+
+    // Vertical moves
+    for (let i = 1; i <= 8; i++) {
+        if (i !== posy) {
+            moves.push({
+                x: posx,
+                y: i
+            });
+        }
+    }
+
+    displayMoves(moves, pos, 'br');
 }
+
 function whiteKnight(pos) {
+    moves = [];
 
+    let [posx, posy] = getXY(pos);
+
+    // Knight moves
+    const knightMoves = [
+        { x: posx + 1, y: posy + 2 },
+        { x: posx + 1, y: posy - 2 },
+        { x: posx - 1, y: posy + 2 },
+        { x: posx - 1, y: posy - 2 },
+        { x: posx + 2, y: posy + 1 },
+        { x: posx + 2, y: posy - 1 },
+        { x: posx - 2, y: posy + 1 },
+        { x: posx - 2, y: posy - 1 }
+    ];
+
+    moves.push(...knightMoves);
+
+    displayMoves(moves, pos, 'wn');
 }
+
 function blackKnight(pos) {
+    moves = [];
 
+    let [posx, posy] = getXY(pos);
+
+    // Knight moves
+    const knightMoves = [
+        { x: posx + 1, y: posy + 2 },
+        { x: posx + 1, y: posy - 2 },
+        { x: posx - 1, y: posy + 2 },
+        { x: posx - 1, y: posy - 2 },
+        { x: posx + 2, y: posy + 1 },
+        { x: posx + 2, y: posy - 1 },
+        { x: posx - 2, y: posy + 1 },
+        { x: posx - 2, y: posy - 1 }
+    ];
+
+    moves.push(...knightMoves);
+
+    displayMoves(moves, pos, 'bn');
 }
+
 function whiteBishop(pos) {
+    moves = [];
 
+    let [posx, posy] = getXY(pos);
+
+    // Diagonal moves
+    for (let i = 1; i <= 8; i++) {
+        if (posx + i <= 8 && posy + i <= 8) {
+            moves.push({
+                x: posx + i,
+                y: posy + i
+            });
+        }
+        if (posx - i >= 1 && posy - i >= 1) {
+            moves.push({
+                x: posx - i,
+                y: posy - i
+            });
+        }
+        if (posx + i <= 8 && posy - i >= 1) {
+            moves.push({
+                x: posx + i,
+                y: posy - i
+            });
+        }
+        if (posx - i >= 1 && posy + i <= 8) {
+            moves.push({
+                x: posx - i,
+                y: posy + i
+            });
+        }
+    }
+
+    displayMoves(moves, pos, 'wb');
 }
+
 function blackBishop(pos) {
+    moves = [];
 
+    let [posx, posy] = getXY(pos);
+
+    // Diagonal moves
+    for (let i = 1; i <= 8; i++) {
+        if (posx + i <= 8 && posy + i <= 8) {
+            moves.push({
+                x: posx + i,
+                y: posy + i
+            });
+        }
+        if (posx - i >= 1 && posy - i >= 1) {
+            moves.push({
+                x: posx - i,
+                y: posy - i
+            });
+        }
+        if (posx + i <= 8 && posy - i >= 1) {
+            moves.push({
+                x: posx + i,
+                y: posy - i
+            });
+        }
+        if (posx - i >= 1 && posy + i <= 8) {
+            moves.push({
+                x: posx - i,
+                y: posy + i
+            });
+        }
+    }
+
+    displayMoves(moves, pos, 'bb');
 }
+
 function whiteQueen(pos) {
+    moves = [];
 
+    let [posx, posy] = getXY(pos);
+
+    // Horizontal moves
+    for (let i = 1; i <= 8; i++) {
+        if (i !== posx) {
+            moves.push({
+                x: i,
+                y: posy
+            });
+        }
+    }
+
+    // Vertical moves
+    for (let i = 1; i <= 8; i++) {
+        if (i !== posy) {
+            moves.push({
+                x: posx,
+                y: i
+            });
+        }
+    }
+
+    // Diagonal moves
+    for (let i = 1; i <= 8; i++) {
+        if (posx + i <= 8 && posy + i <= 8) {
+            moves.push({
+                x: posx + i,
+                y: posy + i
+            });
+        }
+        if (posx - i >= 1 && posy - i >= 1) {
+            moves.push({
+                x: posx - i,
+                y: posy - i
+            });
+        }
+        if (posx + i <= 8 && posy - i >= 1) {
+            moves.push({
+                x: posx + i,
+                y: posy - i
+            });
+        }
+        if (posx - i >= 1 && posy + i <= 8) {
+            moves.push({
+                x: posx - i,
+                y: posy + i
+            });
+        }
+    }
+
+    displayMoves(moves, pos, 'wq');
 }
+
 function blackQueen(pos) {
+    moves = [];
 
+    let [posx, posy] = getXY(pos);
+
+    // Horizontal moves
+    for (let i = 1; i <= 8; i++) {
+        if (i !== posx) {
+            moves.push({
+                x: i,
+                y: posy
+            });
+        }
+    }
+
+    // Vertical moves
+    for (let i = 1; i <= 8; i++) {
+        if (i !== posy) {
+            moves.push({
+                x: posx,
+                y: i
+            });
+        }
+    }
+
+    // Diagonal moves
+    for (let i = 1; i <= 8; i++) {
+        if (posx + i <= 8 && posy + i <= 8) {
+            moves.push({
+                x: posx + i,
+                y: posy + i
+            });
+        }
+        if (posx - i >= 1 && posy - i >= 1) {
+            moves.push({
+                x: posx - i,
+                y: posy - i
+            });
+        }
+        if (posx + i <= 8 && posy - i >= 1) {
+            moves.push({
+                x: posx + i,
+                y: posy - i
+            });
+        }
+        if (posx - i >= 1 && posy + i <= 8) {
+            moves.push({
+                x: posx - i,
+                y: posy + i
+            });
+        }
+    }
+
+    displayMoves(moves, pos, 'bq');
 }
+
 function whiteKing(pos) {
+    moves = [];
 
+    let [posx, posy] = getXY(pos);
+
+    // King moves
+    const kingMoves = [
+        { x: posx + 1, y: posy },
+        { x: posx + 1, y: posy + 1 },
+        { x: posx + 1, y: posy - 1 },
+        { x: posx - 1, y: posy },
+        { x: posx - 1, y: posy + 1 },
+        { x: posx - 1, y: posy - 1 },
+        { x: posx, y: posy + 1 },
+        { x: posx, y: posy - 1 }
+    ];
+
+    moves.push(...kingMoves);
+
+    displayMoves(moves, pos, 'wk');
 }
+
 function blackKing(pos) {
+    moves = [];
 
+    let [posx, posy] = getXY(pos);
+
+    // King moves
+    const kingMoves = [
+        { x: posx + 1, y: posy },
+        { x: posx + 1, y: posy + 1 },
+        { x: posx + 1, y: posy - 1 },
+        { x: posx - 1, y: posy },
+        { x: posx - 1, y: posy + 1 },
+        { x: posx - 1, y: posy - 1 },
+        { x: posx, y: posy + 1 },
+        { x: posx, y: posy - 1 }
+    ];
+
+    moves.push(...kingMoves);
+
+    displayMoves(moves, pos, 'bk');
 }
+
 
 
 
