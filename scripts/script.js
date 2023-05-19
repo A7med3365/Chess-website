@@ -1,17 +1,17 @@
 
-const piecesTypes = [
-    "bp",
-    "br",
-    "bb",
-    "bn",
-    "bq",
-    "bk",
-    "wp",
-    "wr",
-    "wb",
-    "wn",
-    "wq",
-    "wk"
+const piecesTypes = [       //chess pieces types
+    "bp",   //black pawn
+    "br",   //black rook
+    "bb",   //black bishop
+    "bn",   //black knight
+    "bq",   //black queen
+    "bk",   //black king
+    "wp",   //white pawn
+    "wr",   //white rook
+    "wb",   //white bishop
+    "wn",   //white knight
+    "wq",   //white queen
+    "wk"    //white king
 
 ]
 
@@ -19,58 +19,138 @@ const piecesTypes = [
 --------------------------Functions----------------------------------
 */
 
-function gameInit() {
+function gameInit() { //initlizing the game, putting every piece in the starting position. only white for now
     
-    for (let i = 1; i <= 8; i++) { $(`.pos-7${i}`).addClass('wp') }
-    $(`.pos-11`).addClass('wr')
-    $(`.pos-18`).addClass('wr')
-    $(`.pos-12`).addClass('wn')
-    $(`.pos-17`).addClass('wn')
-    $(`.pos-13`).addClass('wb')
-    $(`.pos-16`).addClass('wb')
-    $(`.pos-14`).addClass('wq')
-    $(`.pos-15`).addClass('wk')
+    for (let i = 1; i <= 8; i++) { addPiece(`pos-2${i}`,'wp') }
+    addPiece(`pos-11`,'wr')
+    addPiece(`pos-18`,'wr')
+    addPiece(`pos-12`,'wn')
+    addPiece(`pos-17`,'wn')
+    addPiece(`pos-13`,'wb')
+    addPiece(`pos-16`,'wb')
+    addPiece(`pos-14`,'wq')
+    addPiece(`pos-15`,'wk')
 }
 
-function addEvents() {
+
+function addEvent(piece) {  //this will add onClick event on all pieces of type *piece*, might add a position input to target one piece
+    $(`.${piece}`).on('click',function(){
+
+        const piece = event.target.classList[1]
+        const pos = event.target.classList[0]
+        console.log(pos);
+        //console.log(piece,pos.split("-")[1][0]);
+
+        posx = pos.split("-")[1][1]
+        posy = pos.split("-")[1][0]
+        newPos="pos-"+String(Number(posy)+1)+posx
+        console.log(newPos);
+        console.log(posx,posy);
+        movePiece(pos,newPos,piece)
+        
+    })
+}
+
+function addEventAll() { //this will add onClick event on all pieces on the board
     
     for (const piece of piecesTypes) {
-        $(`.${piece}`).on('click',function(){
-
-            const piece = event.target.classList[1]
-            const pos = event.target.classList[0]
-            console.log(pos);
-            //console.log(piece,pos.split("-")[1][0]);
-    
-            posx = pos.split("-")[1][1]
-            posy = pos.split("-")[1][0]
-            newPos="pos-"+String(Number(posy)+1)+posx
-            console.log(newPos);
-            console.log(posx,posy);
-            movePiece(pos,newPos,piece)
-            
-        })
+        addEvent(piece)
     }
 }
 
-function removePiece(pos,piece) {
+function removePiece(pos,piece) {       //remove a piece of type *piece* in the positon *pos*
     console.log(2);
     $(`.${pos}`).removeClass(piece)
-    console.log($(pos));
+    //console.log($(pos));
 }
 
-function addPiece(pos,piece) {
-    console.log(3);
+function addPiece(pos,piece) {          //add a piece of type *piece* in the positon *pos*
+    //console.log(3);
     $(`.${pos}`).addClass(piece)
 }
 
-function movePiece(from, to, piece){
+function movePiece(from, to, piece){    //move a piece of type *piece* 
     console.log(1);
     removePiece(from,piece)
     addPiece(to,piece)
-    addEvents()
+    addEvent(piece)
 }
 
+
+function possibleMove(pos) {        //this will display a possible move on the board at *pos*
+    
+}
+
+function addEventPossibleMove(pos) {    //this will add en event for the possible move, onClick -> movePiece to the clicked position
+    
+}
+
+
+
+
+/*
+--------------------------chess pieces moves----------------------------------
+*/
+
+
+function whitePawn() {
+
+}
+function blackPawn() {
+
+}
+function whiteRook() {
+
+}
+function blackRook() {
+
+}
+function whiteKnight() {
+
+}
+function blackKnight() {
+
+}
+function whiteBishop() {
+
+}
+function blackBishop() {
+
+}
+function whiteQueen() {
+
+}
+function blackQueen() {
+
+}
+function whiteKing() {
+
+}
+function blackKing() {
+
+}
+
+
+
+/*
+--------------------------objects----------------------------------
+*/
+
+const chessPiecesMoves = {
+    wp: whitePawn,
+    bp: blackPawn,
+    wr: whiteRook,
+    br: blackRook,
+    wn: whiteKnight,
+    bn: blackKnight,
+    wb: whiteBishop,
+    bb: blackBishop,
+    wq: whiteQueen,
+    bq: blackQueen,
+    wk: whiteKing,
+    bk: blackKing
+  };
+  
 
 
 
@@ -106,8 +186,8 @@ for (let i = 8; i >= 1; i--) {
 --------------------------expermints----------------------------------
 */
 
-    $('div.pos-23').addClass('wp')
-    $('div.pos-24').addClass('wp')
+    // $('div.pos-23').addClass('wp')
+    // $('div.pos-24').addClass('wp')
 
     // $('.wp').on('click',function(){
 
@@ -125,6 +205,7 @@ for (let i = 8; i >= 1; i--) {
 
     // })
 
-    //gameInit()
+    gameInit()
 
-    addEvents()
+    addEventAll()
+    chessPiecesMoves.bb()
