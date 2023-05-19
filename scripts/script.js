@@ -1,4 +1,19 @@
 
+const piecesTypes = [
+    "bp",
+    "br",
+    "bb",
+    "bn",
+    "bq",
+    "bk",
+    "wp",
+    "wr",
+    "wb",
+    "wn",
+    "wq",
+    "wk"
+
+]
 
 /*
 --------------------------Functions----------------------------------
@@ -17,6 +32,27 @@ function gameInit() {
     $(`.pos-15`).addClass('wk')
 }
 
+function addEvents() {
+    
+    for (const piece of piecesTypes) {
+        $(`.${piece}`).on('click',function(){
+
+            const piece = event.target.classList[1]
+            const pos = event.target.classList[0]
+            console.log(pos);
+            //console.log(piece,pos.split("-")[1][0]);
+    
+            posx = pos.split("-")[1][1]
+            posy = pos.split("-")[1][0]
+            newPos="pos-"+String(Number(posy)+1)+posx
+            console.log(newPos);
+            console.log(posx,posy);
+            movePiece(pos,newPos,piece)
+            
+        })
+    }
+}
+
 function removePiece(pos,piece) {
     console.log(2);
     $(`.${pos}`).removeClass(piece)
@@ -32,6 +68,7 @@ function movePiece(from, to, piece){
     console.log(1);
     removePiece(from,piece)
     addPiece(to,piece)
+    addEvents()
 }
 
 
@@ -57,22 +94,6 @@ for (let i = 8; i >= 1; i--) {
             currentBox.css({'background-color':'white'})
         }
         
-        $(`.pos-${i}${j}`).on('click',function(){
-
-            const piece = event.target.classList[1]
-            const pos = event.target.classList[0]
-            console.log(pos);
-            //console.log(piece,pos.split("-")[1][0]);
-    
-            posx = pos.split("-")[1][1]
-            posy = pos.split("-")[1][0]
-            newPos="pos-"+String(Number(posy)+1)+posx
-            console.log(newPos);
-            console.log(posx,posy);
-            movePiece(pos,newPos,piece)
-    
-        })
-    
     }
 
 
@@ -105,3 +126,5 @@ for (let i = 8; i >= 1; i--) {
     // })
 
     //gameInit()
+
+    addEvents()
