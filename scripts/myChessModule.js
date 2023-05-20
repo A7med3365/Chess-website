@@ -474,6 +474,18 @@ const chessBoard = {
 
 
     /**
+     * clears the board of pieces
+     */
+    clearBoard : function() { 
+    
+        for (const piece of chessBoard.piecesTypes) {
+            $(`.${piece}`).removeClass(piece)
+        }
+    },
+
+
+
+    /**
      * remove a piece of type *piece* in the positon *pos*
      * 
      * @param {String} pos  - the position class, pos-yx
