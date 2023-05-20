@@ -535,10 +535,10 @@ for (let i = 8; i >= 1; i--) {
 
     // })
 
-    //gameInit()
+    gameInit()
 
-    addPiece(`.pos-53`,'wq')
-    addPiece(`.pos-56`,'wb ')
+    // addPiece(`.pos-53`,'wq')
+    // addPiece(`.pos-56`,'wb ')
 
     
 
