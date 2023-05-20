@@ -3,11 +3,12 @@ import { chessBoard } from "./myChessModule.js";
 chessBoard.generateBoard()
 //chessBoard.gameInit()
 
-chessBoard.addPiece(".pos-55",chessBoard.chessPieces.whiteBishop)
+//chessBoard.addPiece(".pos-55",chessBoard.chessPieces.whiteBishop)
 
 chessBoard.addEventAll()
 
 const buttons = $('div#spawn button')
+const buttonsBlack = $('div#spawn-black button')
 
 buttons.each(function(index){
     
@@ -15,6 +16,15 @@ buttons.each(function(index){
 
         const piece = $(this).attr('value')
         chessBoard.addPiece('.pos-55',piece)
+    })
+})
+
+buttonsBlack.each(function(index){
+    
+    $(this).on('click',function() {
+
+        const piece = $(this).attr('value')
+        chessBoard.addPiece('.pos-15',piece)
     })
 })
 

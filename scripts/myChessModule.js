@@ -28,7 +28,7 @@ const chessPiecesMoves = {
             y:posy+1
         })
         
-        if (posy == 2) {
+        if ((posy == 2) && (!chessBoard.resCheck(posx,posy+1))) {
             moves.push({
                 x:posx,
                 y:posy+2
@@ -355,6 +355,7 @@ const chessBoard = {
 
 
     piecesTypes : [       //chess pieces types
+
         "bp",   //black pawn
         "br",   //black rook
         "bb",   //black bishop
@@ -427,10 +428,13 @@ const chessBoard = {
      */
     movePiece : function(from, to, piece){    
         //console.log(1);
-        chessBoard.removePiece(from,piece)
-        chessBoard.addPiece(to,piece)
+        
     
         $('.mv').removeClass("mv").off('click') //clear the previous displayed moves
+
+        chessBoard.removePiece(from,piece)
+        chessBoard.addPiece(to,piece)
+
         chessBoard.addEvent(piece)
         
     },
@@ -453,7 +457,7 @@ const chessBoard = {
             const piece = e.target.classList[1]
             const pos = e.target.classList[0]
             //console.log(pos)
-            
+            console.log(e.target.classList);
             chessPiecesMoves[piece](pos)
             
         })
@@ -479,7 +483,11 @@ const chessBoard = {
     clearBoard : function() { 
     
         for (const piece of chessBoard.piecesTypes) {
+
+            $(`.${piece}`).attr('value','empty')
             $(`.${piece}`).removeClass(piece)
+            chessBoard.clearMoves()
+            
         }
     },
 
@@ -508,6 +516,7 @@ const chessBoard = {
     addPiece : function(pos,piece) {          
         //console.log(3);
         $(pos).addClass(piece)
+        chessBoard.addEvent(piece)
         $(pos).attr('value',piece[0])
     },
 
@@ -529,6 +538,18 @@ const chessBoard = {
         chessBoard.addPiece(`.pos-16`,'wb')
         chessBoard.addPiece(`.pos-14`,'wq')
         chessBoard.addPiece(`.pos-15`,'wk')
+
+        for (let i = 1; i <= 8; i++) { chessBoard.addPiece(`.pos-7${i}`,'bp') }
+        chessBoard.addPiece(`.pos-81`,'br')
+        chessBoard.addPiece(`.pos-88`,'br')
+        chessBoard.addPiece(`.pos-82`,'bn')
+        chessBoard.addPiece(`.pos-87`,'bn')
+        chessBoard.addPiece(`.pos-83`,'bb')
+        chessBoard.addPiece(`.pos-86`,'bb')
+        chessBoard.addPiece(`.pos-84`,'bq')
+        chessBoard.addPiece(`.pos-85`,'bk')
+
+        chessBoard.addEventAll()
     },
 
     
@@ -612,7 +633,7 @@ const chessBoard = {
                 let from = currPos
                 let to = pos
         
-                console.log(from,to);
+                //console.log(from,to);
         
                 chessBoard.movePiece('.'+from, to, piece)
         

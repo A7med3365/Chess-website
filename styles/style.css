@@ -11,37 +11,37 @@ div#chess-board {
 } */
 
 div.bp {
-    background-image: url("../images/pawn.png");
+    background-image: url("../images/blackPawn.png");
     background-size: contain;
     background-repeat: no-repeat;
     background-position: center;
 }
 div.br {
-    background-image: url("../images/pawn.png");
+    background-image: url("../images/blackRook.png");
     background-size: contain;
     background-repeat: no-repeat;
     background-position: center;
 }
 div.bn {
-    background-image: url("../images/pawn.png");
+    background-image: url("../images/blackKnight.png");
     background-size: contain;
     background-repeat: no-repeat;
     background-position: center;
 }
 div.bb {
-    background-image: url("../images/pawn.png");
+    background-image: url("../images/blackBishop.png");
     background-size: contain;
     background-repeat: no-repeat;
     background-position: center;
 }
 div.bq {
-    background-image: url("../images/pawn.png");
+    background-image: url("../images/blackQueen.png");
     background-size: contain;
     background-repeat: no-repeat;
     background-position: center;
 }
 div.bk {
-    background-image: url("../images/pawn.png");
+    background-image: url("../images/blackKing.png");
     background-size: contain;
     background-repeat: no-repeat;
     background-position: center;
