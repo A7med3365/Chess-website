@@ -3,8 +3,9 @@ import { chessBoard } from "./myChessModule.js";
 chessBoard.generateBoard()
 //chessBoard.gameInit()
 
-//chessBoard.addPiece(".pos-55",chessBoard.chessPieces.whiteBishop)
+chessBoard.addPiece(".pos-55",chessBoard.chessPieces.whiteBishop)
 
+console.log($('.pos-55').attr('class').split(/\s+/))
 chessBoard.addEventAll()
 
 const buttons = $('div#spawn button')
@@ -35,3 +36,5 @@ $('button#init').on('click',function(){
 $('button#clear').on('click',function(){
     chessBoard.clearBoard()
 })
+
+

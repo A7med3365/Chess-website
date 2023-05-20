@@ -297,7 +297,32 @@ const chessPiecesMoves = {
   };
   
 
+
   
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 /*
 --------------------------moves object----------------------------------
@@ -331,9 +356,11 @@ const chessBoard = {
                 const currentBox = $(`.pos-${i}${j}`)
 
                 if ((j % 2 == 0 && i % 2 == 0)||(j % 2 == 1 && i % 2 == 1)) {
-                    currentBox.css({'background-color':dark})
+                    currentBox.addClass('dark')
+                    //currentBox.css({'background-color':dark})
                 } else {
-                    currentBox.css({'background-color':light})
+                    currentBox.addClass('light')
+                    //currentBox.css({'background-color':light})
                 }
                 
             }
@@ -350,6 +377,19 @@ const chessBoard = {
      */
     clearMoves: function(){
         $('.mv').removeClass("mv").off('click') //clear the previous displayed moves
+        console.log(1);
+        const takeMoves = $('.take')
+        
+        takeMoves.each(function(index) {
+            let [x,y] = chessBoard.getXY($(this).attr('class').split(/\s+/)[0])
+            if (chessBoard.isDark(x,y)) {
+                $(this).removeClass("take").toggleClass('dark')
+            } else {
+                $(this).removeClass("take").toggleClass('light')
+            }
+        })
+
+        
         chessBoard.addEventAll()
     },
 
@@ -430,7 +470,9 @@ const chessBoard = {
         //console.log(1);
         
     
-        $('.mv').removeClass("mv").off('click') //clear the previous displayed moves
+        // $('.mv').removeClass("mv").off('click') //clear the previous displayed moves
+
+        chessBoard.clearMoves()
 
         chessBoard.removePiece(from,piece)
         chessBoard.addPiece(to,piece)
@@ -454,10 +496,10 @@ const chessBoard = {
         $(`.${piece}`).on('click',function(e){
     
     
-            const piece = e.target.classList[1]
+            const piece = e.target.classList[2]
             const pos = e.target.classList[0]
             //console.log(pos)
-            console.log(e.target.classList);
+            //console.log(e.target.classList);
             chessPiecesMoves[piece](pos)
             
         })
@@ -500,7 +542,7 @@ const chessBoard = {
      * @param {string} piece     - the class of the chess piece     
      */
     removePiece : function(pos,piece) {       
-        console.log(2);
+        //console.log(2);
         $(pos).removeClass(piece)
         $(pos).attr('value','empty')
         //console.log($(pos));
@@ -613,7 +655,8 @@ const chessBoard = {
      * @param {Boolean} clear -flag for clearing the displayed moves on the board, set to false if you want to add moves
      */
     displayMoves : function(moves ,currPos, piece, clear = true) {
-    
+        
+        console.log(moves);
         if (clear) {
             chessBoard.clearMoves()
         }
@@ -638,14 +681,30 @@ const chessBoard = {
                 chessBoard.movePiece('.'+from, to, piece)
         
             })
+            } else if ($(pos).attr('value')[0]!=piece[0]) {
+                chessBoard.take(pos)
             }
                     
         }
     
-    }
+    },
     
 
+    take : function(pos) {
 
+        const [x,y] = chessBoard.getXY(pos)
+
+        if (chessBoard.isDark(x,y)) {
+            $(pos).addClass("take").toggleClass('dark')
+        } else {
+            $(pos).addClass("take").toggleClass('light')
+        }
+        
+    },
+
+    isDark : function(x,y) {
+        return((x % 2 == 0 && y % 2 == 0)||(x % 2 == 1 && y % 2 == 1))
+    }
 
 
 

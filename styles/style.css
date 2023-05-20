@@ -82,10 +82,26 @@ div.wk {
     background-repeat: no-repeat;
     background-position: center;
 }
+
+
 div.mv {
     background-image: url("../images/mv.png");
     background-size: 40%;
     background-repeat: no-repeat;
     background-position: center;
     opacity:0.5 ;
+}
+
+div.take {
+    background-color: rgba(255, 0, 0, 0.200);
+    /* opacity: 0.1; */
+}
+
+div.light {
+    background-color: white;
+    border: 1px black;
+}
+
+div.dark {
+    background-color: gray;
 }
