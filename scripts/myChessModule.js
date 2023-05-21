@@ -28,7 +28,7 @@ const chessPiecesMoves = {
             y:posy+1
         })
         
-        if ((posy == 2) && (!chessBoard.resCheck(posx,posy+1))) {
+        if ((posy == 2) && (!chessBoard.isEmpty(posx,posy+1))) {
             moves.push({
                 x:posx,
                 y:posy+2
@@ -332,6 +332,7 @@ const chessPiecesMoves = {
 const chessBoard = {
 
 
+
     /**
      * generate the chess board in side div#chess-board
      *
@@ -342,10 +343,8 @@ const chessBoard = {
 
 
 
-        /*
-        --------------------------chess Board generation----------------------------------
-        */
-
+        this.light = light
+        this.dark = dark
 
         const chessBoardSelector = $('#chess-board')
 
@@ -356,11 +355,11 @@ const chessBoard = {
                 const currentBox = $(`.pos-${i}${j}`)
 
                 if ((j % 2 == 0 && i % 2 == 0)||(j % 2 == 1 && i % 2 == 1)) {
-                    currentBox.addClass('dark')
-                    //currentBox.css({'background-color':dark})
+                    //currentBox.addClass('dark')
+                    currentBox.css({'background-color':this.dark})
                 } else {
-                    currentBox.addClass('light')
-                    //currentBox.css({'background-color':light})
+                    //currentBox.addClass('light')
+                    currentBox.css({'background-color':this.light})
                 }
                 
             }
@@ -383,11 +382,14 @@ const chessBoard = {
         takeMoves.each(function(index) {
             let [x,y] = chessBoard.getXY($(this).attr('class').split(/\s+/)[0])
             if (chessBoard.isDark(x,y)) {
-                $(this).removeClass("take").toggleClass('dark')
+                $(this).css({'background-color':chessBoard.dark})
+                // $(this).removeClass("take").toggleClass('dark')
             } else {
-                $(this).removeClass("take").toggleClass('light')
+                $(this).css({'background-color':chessBoard.light})
+                // $(this).removeClass("take").toggleClass('light')
             }
         })
+        takeMoves.removeClass('take').off('click')
 
         
         chessBoard.addEventAll()
@@ -449,7 +451,7 @@ const chessBoard = {
      * @param {Number} y    - the row
      * @returns {boolean}   - the answar in bool
      */
-    resCheck : function(x,y) {
+    isEmpty : function(x,y) {
         const pos = ".pos-" + String(y)+String(x)
         if ($(pos).attr('value')=='empty'){
             return false
@@ -496,7 +498,7 @@ const chessBoard = {
         $(`.${piece}`).on('click',function(e){
     
     
-            const piece = e.target.classList[2]
+            const piece = e.target.classList[1]
             const pos = e.target.classList[0]
             //console.log(pos)
             //console.log(e.target.classList);
@@ -633,7 +635,7 @@ const chessBoard = {
                 'y': y
             })
             
-            if (chessBoard.resCheck(x,y)) { break } //break if we reach another piece
+            if (chessBoard.isEmpty(x,y)) { break } //break if we reach another piece
     
             x += dx         //increment in the desired direction
             y += dy         //increment in the desired direction
@@ -671,18 +673,38 @@ const chessBoard = {
     
                 $(pos).addClass("mv")
     
-            $(`.mv${pos}`).on('click',function(e){       //this will add en event for the possible move, onClick -> movePiece to the clicked position
+            $(pos).on('click',function(e){       //this will add en event for the possible move, onClick -> movePiece to the clicked position
     
                 let from = currPos
                 let to = pos
         
-                //console.log(from,to);
+                console.log(1);
         
                 chessBoard.movePiece('.'+from, to, piece)
         
             })
+
             } else if ($(pos).attr('value')[0]!=piece[0]) {
-                chessBoard.take(pos)
+                
+                $(pos).css({'background-color':"rgba(255, 0, 0, 0.200)"})
+                $(pos).addClass("take")
+
+                $(pos).on('click',function(e){       //this will add en event for the possible move, onClick -> movePiece to the clicked position
+    
+                    let from = currPos
+                    let to = pos
+                    
+                    const takenPiece = $(pos).attr('class').split(/\s+/)[1]
+                    console.log(takenPiece);
+            
+                    chessBoard.removePiece(pos,takenPiece)
+                    $(pos).off('click') //----------------------------------------------
+                    chessBoard.displayTakenPiece(takenPiece)
+                    chessBoard.movePiece('.'+from, to, piece)
+            
+                })
+
+                //chessBoard.take(pos)
             }
                     
         }
@@ -690,20 +712,26 @@ const chessBoard = {
     },
     
 
-    take : function(pos) {
+    // take : function(pos) {
 
-        const [x,y] = chessBoard.getXY(pos)
+    //     $(pos).css({'background-color':"rgba(255, 0, 0, 0.200)"})
+    //     $(pos).addClass("take")
 
-        if (chessBoard.isDark(x,y)) {
-            $(pos).addClass("take").toggleClass('dark')
-        } else {
-            $(pos).addClass("take").toggleClass('light')
-        }
+    //     $(pos).on('click',function(e) {
+            
+
+    //     })
         
-    },
+        
+    // },
 
     isDark : function(x,y) {
         return((x % 2 == 0 && y % 2 == 0)||(x % 2 == 1 && y % 2 == 1))
+    },
+
+
+    displayTakenPiece : function(takenPiece) {
+        
     }
 
 
