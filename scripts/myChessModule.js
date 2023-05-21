@@ -23,17 +23,34 @@ const chessPiecesMoves = {
         let [posx,posy] = chessBoard.getXY(pos)
         //console.log(typeof(x),x,y)
 
-        moves.push({
-            x:posx,
-            y:posy+1
-        })
-        
-        if ((posy == 2) && (!chessBoard.isEmpty(posx,posy+1))) {
+        if ((!chessBoard.isEmpty(posx,posy+1))) {
+
             moves.push({
                 x:posx,
-                y:posy+2
+                y:posy+1
             })
+            
+            if (posy == 2 && !chessBoard.isEmpty(posx,posy+2)) {
+                moves.push({
+                    x:posx,
+                    y:posy+2
+                })
+            }
         }
+
+        if ((chessBoard.isEmpty(posx-1,posy+1))) {
+            moves.push({
+                x: posx - 1,
+                y: posy + 1
+            });
+        }
+        if ((chessBoard.isEmpty(posx+1,posy+1))) {
+            moves.push({
+                x: posx + 1,
+                y: posy + 1
+            });
+        }
+        
 
         chessBoard.displayMoves(moves,pos,'wp');
 
@@ -45,15 +62,32 @@ const chessPiecesMoves = {
 
         let [posx, posy] = chessBoard.getXY(pos);
 
-        moves.push({
-            x: posx,
-            y: posy - 1
-        });
+        if ((!chessBoard.isEmpty(posx,posy-1))) {
 
-        if (posy == 7) {
             moves.push({
                 x: posx,
-                y: posy - 2
+                y: posy - 1
+            });
+    
+            if (posy == 7 && !chessBoard.isEmpty(posx,posy-2)) {
+                moves.push({
+                    x: posx,
+                    y: posy - 2
+                });
+            }
+
+        }
+        
+        if ((chessBoard.isEmpty(posx-1,posy-1))) {
+            moves.push({
+                x: posx - 1,
+                y: posy - 1
+            });
+        }
+        if ((chessBoard.isEmpty(posx+1,posy-1))) {
+            moves.push({
+                x: posx + 1,
+                y: posy - 1
             });
         }
 
@@ -119,7 +153,14 @@ const chessPiecesMoves = {
             { x: posx - 2, y: posy - 1 }
         ];
 
-        moves.push(...knightMoves);
+        for (const move of knightMoves) {
+            let moveX = move.x
+            let moveY = move.y
+
+            if(moveX >= 1 && moveX <= 8 && moveY >= 1 && moveY <= 8){
+                moves.push(move);
+            }
+        }
 
         chessBoard.displayMoves(moves, pos, 'wn');
 
@@ -143,7 +184,19 @@ const chessPiecesMoves = {
             { x: posx - 2, y: posy - 1 }
         ];
 
-        moves.push(...knightMoves);
+        for (const move of knightMoves) {
+            let moveX = move.x
+            let moveY = move.y
+
+            if(moveX >= 1 && moveX <= 8 && moveY >= 1 && moveY <= 8){
+                moves.push(move);
+            }
+        }
+
+        //console.log(moves);
+
+
+        
 
         chessBoard.displayMoves(moves, pos, 'bn');
 
@@ -380,7 +433,11 @@ const chessBoard = {
         const takeMoves = $('.take')
         
         takeMoves.each(function(index) {
-            let [x,y] = chessBoard.getXY($(this).attr('class').split(/\s+/)[0])
+            const pos = $(this).attr('class').split(/\s+/)[0]
+            let [x,y] = chessBoard.getXY(pos)
+            console.log(pos);
+            const takenPiece = $(this).attr('class').split(/\s+/)[1];
+
             if (chessBoard.isDark(x,y)) {
                 $(this).css({'background-color':chessBoard.dark})
                 // $(this).removeClass("take").toggleClass('dark')
@@ -388,11 +445,14 @@ const chessBoard = {
                 $(this).css({'background-color':chessBoard.light})
                 // $(this).removeClass("take").toggleClass('light')
             }
+            $(this).removeClass('take').off('click')
+            chessBoard.addEvent(takenPiece,'.'+pos)
+            
         })
-        takeMoves.removeClass('take').off('click')
+        
 
         
-        chessBoard.addEventAll()
+        //chessBoard.addEventAll()
     },
 
 
@@ -472,14 +532,14 @@ const chessBoard = {
         //console.log(1);
         
     
-        // $('.mv').removeClass("mv").off('click') //clear the previous displayed moves
+        $('.mv').removeClass("mv").off('click') //clear the previous displayed moves
 
         chessBoard.clearMoves()
 
         chessBoard.removePiece(from,piece)
         chessBoard.addPiece(to,piece)
 
-        chessBoard.addEvent(piece)
+        //chessBoard.addEvent(piece,to)//CHANGE
         
     },
 
@@ -492,16 +552,17 @@ const chessBoard = {
      * 
      * @param {String} piece    - the class of the chess piece
      */
-    addEvent : function(piece) {  
+    addEvent : function(piece,pos) {  
 
-
-        $(`.${piece}`).on('click',function(e){
+        console.log(2);
+        $(`${pos}`).off('click')
+        $(`${pos}`).on('click',function(e){
     
     
             const piece = e.target.classList[1]
             const pos = e.target.classList[0]
             //console.log(pos)
-            //console.log(e.target.classList);
+            console.log(e.target.classList);
             chessPiecesMoves[piece](pos)
             
         })
@@ -515,7 +576,12 @@ const chessBoard = {
     addEventAll : function() { 
     
         for (const piece of chessBoard.piecesTypes) {
-            chessBoard.addEvent(piece)
+            const pieces = $(`.${piece}`)
+
+            pieces.each(function(index) {
+                const pos = $(this).attr('class').split(/\s+/)[0]
+                chessBoard.addEvent(piece,pos)
+            })
         }
     },
 
@@ -529,7 +595,7 @@ const chessBoard = {
         for (const piece of chessBoard.piecesTypes) {
 
             $(`.${piece}`).attr('value','empty')
-            $(`.${piece}`).removeClass(piece)
+            $(`.${piece}`).removeClass(piece).removeClass('mv').removeClass('take')
             chessBoard.clearMoves()
             
         }
@@ -546,6 +612,7 @@ const chessBoard = {
     removePiece : function(pos,piece) {       
         //console.log(2);
         $(pos).removeClass(piece)
+        $(pos).off('click')
         $(pos).attr('value','empty')
         //console.log($(pos));
     },
@@ -560,7 +627,7 @@ const chessBoard = {
     addPiece : function(pos,piece) {          
         //console.log(3);
         $(pos).addClass(piece)
-        chessBoard.addEvent(piece)
+        chessBoard.addEvent(piece,pos)
         $(pos).attr('value',piece[0])
     },
 
@@ -642,7 +709,7 @@ const chessBoard = {
         }
         
     
-        console.log(moves);
+        //console.log(moves);
         return moves
     },
 
@@ -678,12 +745,12 @@ const chessBoard = {
                 let from = currPos
                 let to = pos
         
-                console.log(1);
+                //console.log(1);
         
                 chessBoard.movePiece('.'+from, to, piece)
         
             })
-
+            console.log($(pos).attr('value'),piece);
             } else if ($(pos).attr('value')[0]!=piece[0]) {
                 
                 $(pos).css({'background-color':"rgba(255, 0, 0, 0.200)"})

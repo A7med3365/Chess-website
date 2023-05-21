@@ -3,10 +3,10 @@ import { chessBoard } from "./myChessModule.js";
 chessBoard.generateBoard()
 //chessBoard.gameInit()
 
-chessBoard.addPiece(".pos-55",chessBoard.chessPieces.whiteBishop)
+// chessBoard.addPiece(".pos-55",chessBoard.chessPieces.whiteBishop)
 
 console.log($('.pos-55').attr('class').split(/\s+/))
-chessBoard.addEventAll()
+//chessBoard.addEventAll()
 
 const buttons = $('div#spawn button')
 const buttonsBlack = $('div#spawn-black button')
