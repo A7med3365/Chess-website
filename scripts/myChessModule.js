@@ -18,9 +18,205 @@ const game = {
         
     },
 
-    isCheck: function(params) {
+    isCheck: function(side) {
+
+        const oppSide = this.side.oppSide[side]
         
-    }
+        // let checkAdj = []
+
+        const kingPos = chessBoard.getPos(`.${side}k`)
+        const [x,y] = chessBoard.getXY(kingPos)
+        console.log(x,y);
+
+
+        //checks from queen, rooks and bishops
+        
+        const queenAndRooks ={
+            right : this.checkRoll(x,y,chessPiecesMoves.right),
+            left : this.checkRoll(x,y,chessPiecesMoves.left),
+            up : this.checkRoll(x,y,chessPiecesMoves.up),
+            down : this.checkRoll(x,y,chessPiecesMoves.down)
+        }
+        const queenAndBishops ={
+            bottomRight : this.checkRoll(x,y,chessPiecesMoves.bottomRight),
+            bottomLeft : this.checkRoll(x,y,chessPiecesMoves.bottomLeft),
+            topRight : this.checkRoll(x,y,chessPiecesMoves.topRight),
+            topLeft : this.checkRoll(x,y,chessPiecesMoves.topLeft)
+        }
+
+        for (const rollSide in queenAndRooks) {
+            const oppPiece = queenAndRooks[rollSide]
+            // console.log(oppPiece[1]);
+            if (oppPiece) {
+                if (oppPiece == `${oppSide}q` || oppPiece == `${oppSide}r` ) {
+                    // console.log(queenAndRooks[rollSide],rollSide); 
+                    // console.log(x+chessPiecesMoves[rollSide][0],y+chessPiecesMoves[rollSide][1]);
+                    // console.log(chessPiecesMoves[rollSide]);
+
+                    // checkAdj.push(
+                    //     {
+                    //         'x': x+chessPiecesMoves[rollSide][0],
+                    //         'y': y+chessPiecesMoves[rollSide][1]
+                    //     })
+                    // console.log(checkAdj);
+
+                    return true
+                }  
+            }
+        }
+        
+        for (const rollSide in queenAndBishops) {
+            const oppPiece = queenAndBishops[rollSide]
+            // console.log(oppPiece[1]);
+            if (oppPiece) {
+                if (oppPiece == `${oppSide}q` || oppPiece == `${oppSide}b` ) {
+                    // console.log(queenAndBishops[rollSide],rollSide);    
+                    // console.log(x+chessPiecesMoves[rollSide][0],y+chessPiecesMoves[rollSide][1]);
+                    // console.log(chessPiecesMoves[rollSide]);
+
+                    // checkAdj.push(
+                    //     {
+                    //         'x': x+chessPiecesMoves[rollSide][0],
+                    //         'y': y+chessPiecesMoves[rollSide][1]
+                    //     })
+                    
+                    return true
+                }  
+            }
+        }
+
+
+        //checks from knights
+
+        const knightMoves = [
+            { x: x + 1, y: y + 2 },
+            { x: x + 1, y: y - 2 },
+            { x: x - 1, y: y + 2 },
+            { x: x - 1, y: y - 2 },
+            { x: x + 2, y: y + 1 },
+            { x: x + 2, y: y - 1 },
+            { x: x - 2, y: y + 1 },
+            { x: x - 2, y: y - 1 }
+        ];
+        console.log(x,y);
+        console.log(knightMoves);
+        for (const position of knightMoves) {
+            
+            if (chessBoard.isPiece(position.x,position.y,oppSide,'n')) { 
+                
+                return true
+                 
+            }
+        }
+
+
+
+        //checks for pawns
+        let pawnMoves =[]
+        if (side == 'w') {
+
+            pawnMoves = [
+                { x: x + 1, y: y + 1 },
+                { x: x - 1, y: y + 1 }
+            ]
+            
+        } else {
+
+            pawnMoves = [
+                { x: x + 1, y: y - 1 },
+                { x: x - 1, y: y - 1 }
+            ]
+        }
+        for (const position of pawnMoves) {
+            
+            if (chessBoard.isPiece(position.x,position.y,oppSide,'p')) { 
+                
+                return true
+                 
+            }
+        }
+
+
+
+
+        //check from king moves, for moves preventions
+
+        const kingMoves = [
+            { x: x + 1, y: y },
+            { x: x + 1, y: y + 1 },
+            { x: x + 1, y: y - 1 },
+            { x: x - 1, y: y },
+            { x: x - 1, y: y + 1 },
+            { x: x - 1, y: y - 1 },
+            { x: x, y: y + 1 },
+            { x: x, y: y - 1 }
+        ]
+
+        for (const position of kingMoves) {
+            
+            if (chessBoard.isPiece(position.x,position.y,oppSide,'k')) { 
+                
+                return true
+                 
+            }
+        }
+
+
+        return false
+
+        // if (checkAdj.length === 0) {
+        //     return 0
+        // } else {
+        //     return checkAdj
+        // }
+
+    },
+
+    checkRoll: function(posX,posY,dir,side) {
+
+        let oppPiece = 0
+    
+        const dx = dir[0]
+        const dy = dir[1]
+    
+        let x = posX + dx
+        let y = posY + dy
+    
+        while (chessBoard.isInside(x,y)) {  //the condition will keep us inside the board
+    
+            
+            
+            if (chessBoard.isEmpty(x,y)) { 
+                const pos = ".pos-" + String(y)+String(x)
+                console.log(pos);
+                oppPiece = $(pos).attr('class').split(/\s+/)[1]
+                break 
+            } //break if we reach another piece
+    
+            x += dx         //increment in the desired direction
+            y += dy         //increment in the desired direction
+            
+        }
+        
+        if (side == oppPiece[0]) {
+            return 0
+        } else {
+            return oppPiece    
+        }
+        
+    },
+
+
+    side:{
+        white:'w',
+        black:'b',
+        oppSide:{
+            w:'b',
+            b:'w'
+        }
+    },
+
+
 
 
 }
@@ -180,7 +376,7 @@ const chessPiecesMoves = {
             let moveX = move.x
             let moveY = move.y
 
-            if(moveX >= 1 && moveX <= 8 && moveY >= 1 && moveY <= 8){
+            if(chessBoard.isInside(moveX,moveY)){
                 moves.push(move);
             }
         }
@@ -211,7 +407,7 @@ const chessPiecesMoves = {
             let moveX = move.x
             let moveY = move.y
 
-            if(moveX >= 1 && moveX <= 8 && moveY >= 1 && moveY <= 8){
+            if(chessBoard.isInside(moveX,moveY)){
                 moves.push(move);
             }
         }
@@ -406,6 +602,36 @@ const chessPiecesMoves = {
 
 
 const chessBoard = {
+
+    getPos: function(selector) {
+        return $(selector).attr('class').split(/\s+/)[0]
+    },
+
+    
+    getPiece: function(pos) {
+        return $(pos).attr('class').split(/\s+/)[1]
+    },
+
+    isInside: function(x,y) {
+        return(x >= 1 && x <= 8 && y >= 1 && y <= 8)
+    },
+
+    isPiece: function(x,y,side,pieceType) {
+
+        if (chessBoard.isEmpty(x,y) && chessBoard.isInside(x,y)) { // if there is a piece at the position and the positon inside the boundries of the board
+            const pos = ".pos-" + String(y)+String(x)
+            
+            const piece = $(pos).attr('class').split(/\s+/)[1]
+            
+            if (piece == `${side}${pieceType}` ) {
+                return true
+            }
+             
+        }
+        return false
+        
+    },
+
 
 
 
@@ -723,7 +949,7 @@ const chessBoard = {
         let x = posx + dx
         let y = posy + dy
     
-        while (x >= 1 && x <= 8 && y >= 1 && y <= 8) {  //the condition will keep us inside the board
+        while (chessBoard.isInside(x,y)) {  //the condition will keep us inside the board
     
             moves.push({        //add the next possible position
                 'x': x,
@@ -854,7 +1080,7 @@ const chessBoard = {
     
 }
 
-export {chessPiecesMoves , chessBoard}
+export {chessPiecesMoves , chessBoard, game}
 
 
 
