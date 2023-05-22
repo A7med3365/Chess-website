@@ -17,16 +17,24 @@ const game = {
     endGame: function() {
         
     },
+    
+    isOver: function() {
 
-    isCheck: function(side) {
+    },
+
+    isCheck: function(side , x = 0  , y = 0) {
 
         const oppSide = this.side.oppSide[side]
         
         // let checkAdj = []
 
-        const kingPos = chessBoard.getPos(`.${side}k`)
-        const [x,y] = chessBoard.getXY(kingPos)
-        console.log(x,y);
+        if (x==0 && y==0) {
+            
+            const kingPos = chessBoard.getPos(`.${side}k`)
+            const [x,y] = chessBoard.getXY(kingPos)            
+        }
+        
+        // console.log(x,y); 
 
 
         //checks from queen, rooks and bishops
@@ -528,7 +536,12 @@ const chessPiecesMoves = {
             { x: posx, y: posy - 1 }
         ];
 
-        moves.push(...kingMoves);
+        for (const move of kingMoves) {
+            if(!game.isCheck(game.side.white,move.x,move.y) && chessBoard.isInside(move.x,move.y)){
+                moves.push(move)
+            }
+        }
+        // moves.push(...kingMoves);
 
         chessBoard.displayMoves(moves, pos, 'wk');
 
@@ -552,7 +565,12 @@ const chessPiecesMoves = {
             { x: posx, y: posy - 1 }
         ];
 
-        moves.push(...kingMoves);
+        for (const move of kingMoves) {
+            if(!game.isCheck(game.side.black,move.x,move.y) && chessBoard.isInside(move.x,move.y)){
+                moves.push(move)
+            }
+        }
+        // moves.push(...kingMoves);
 
         chessBoard.displayMoves(moves, pos, 'bk');
 
