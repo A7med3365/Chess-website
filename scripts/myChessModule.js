@@ -1,6 +1,29 @@
 
 
+const game = {
 
+    start:function() {
+        
+    },
+
+    whiteTurn: function() {
+        
+    },
+
+    blackTurn: function() {
+        
+    },
+
+    endGame: function() {
+        
+    },
+
+    isCheck: function(params) {
+        
+    }
+
+
+}
 
 
 
@@ -429,13 +452,14 @@ const chessBoard = {
      */
     clearMoves: function(){
         $('.mv').removeClass("mv").off('click') //clear the previous displayed moves
-        console.log(1);
+        //console.log(1);
         const takeMoves = $('.take')
         
+
         takeMoves.each(function(index) {
             const pos = $(this).attr('class').split(/\s+/)[0]
             let [x,y] = chessBoard.getXY(pos)
-            console.log(pos);
+            //console.log(pos);
             const takenPiece = $(this).attr('class').split(/\s+/)[1];
 
             if (chessBoard.isDark(x,y)) {
@@ -554,7 +578,7 @@ const chessBoard = {
      */
     addEvent : function(piece,pos) {  
 
-        console.log(2);
+        //console.log(2);
         $(`${pos}`).off('click')
         $(`${pos}`).on('click',function(e){
     
@@ -562,7 +586,7 @@ const chessBoard = {
             const piece = e.target.classList[1]
             const pos = e.target.classList[0]
             //console.log(pos)
-            console.log(e.target.classList);
+            //console.log(e.target.classList);
             chessPiecesMoves[piece](pos)
             
         })
@@ -585,6 +609,8 @@ const chessBoard = {
         }
     },
 
+     
+
 
 
     /**
@@ -597,6 +623,8 @@ const chessBoard = {
             $(`.${piece}`).attr('value','empty')
             $(`.${piece}`).removeClass(piece).removeClass('mv').removeClass('take')
             chessBoard.clearMoves()
+            $('#black-taken').html('')
+            $('#white-taken').html('')
             
         }
     },
@@ -725,7 +753,7 @@ const chessBoard = {
      */
     displayMoves : function(moves ,currPos, piece, clear = true) {
         
-        console.log(moves);
+        //console.log(moves);
         if (clear) {
             chessBoard.clearMoves()
         }
@@ -750,12 +778,13 @@ const chessBoard = {
                 chessBoard.movePiece('.'+from, to, piece)
         
             })
-            console.log($(pos).attr('value'),piece);
+            //console.log($(pos).attr('value'),piece);
             } else if ($(pos).attr('value')[0]!=piece[0]) {
                 
+                $(pos).attr('value')
                 $(pos).css({'background-color':"rgba(255, 0, 0, 0.200)"})
                 $(pos).addClass("take")
-
+                $(pos).off('click')
                 $(pos).on('click',function(e){       //this will add en event for the possible move, onClick -> movePiece to the clicked position
     
                     let from = currPos
@@ -763,10 +792,11 @@ const chessBoard = {
                     
                     const takenPiece = $(pos).attr('class').split(/\s+/)[1]
                     console.log(takenPiece);
-            
+                    
+                    chessBoard.displayTakenPiece(takenPiece,pos)
                     chessBoard.removePiece(pos,takenPiece)
                     $(pos).off('click') //----------------------------------------------
-                    chessBoard.displayTakenPiece(takenPiece)
+                    
                     chessBoard.movePiece('.'+from, to, piece)
             
                 })
@@ -792,12 +822,26 @@ const chessBoard = {
         
     // },
 
+    /**
+     * check if the box should be dark colored
+     * @param {Number} x -x coordinates of a position
+     * @param {Number} y -y coordinates of a position
+     * @returns **true** if the position should be dark
+     */
     isDark : function(x,y) {
         return((x % 2 == 0 && y % 2 == 0)||(x % 2 == 1 && y % 2 == 1))
     },
 
 
-    displayTakenPiece : function(takenPiece) {
+    displayTakenPiece : function(takenPiece,pos) {
+        //console.log(`<div class="taken ${takenPiece}"></div>`);
+        const pieceType = $(pos).attr('value')
+        console.log(pieceType);
+        if (pieceType == 'w') {
+            $('#white-taken').append(`<div class="taken ${takenPiece}"></div>`)
+        } else {
+            $('#black-taken').append(`<div class="taken ${takenPiece}"></div>`)
+        }
         
     }
 

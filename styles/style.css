@@ -1,3 +1,8 @@
+body {
+    background-color: #ff0000;
+    text-align: center;
+}
+
 div#chess-board {
     display: grid;
     grid-template: repeat(8,1fr)/repeat(8,1fr);
@@ -9,6 +14,31 @@ div#chess-board {
 /* div.pos-11 {
     
 } */
+div.taken {
+    width: 60px;
+    height: 60px;
+    margin: 0;
+}
+#black-taken {
+    height: 240px;
+    width: 240px;
+    /* display: grid;
+    grid-template: repeat(8,1fr)/repeat(2,1fr); */
+    display: flex;
+    flex-direction: column-reverse;
+    flex-wrap: wrap;
+    align-content: flex-start;
+}
+#white-taken {
+    height: 240px;
+    width: 240px;
+    /* display: grid;
+    grid-template: repeat(8,1fr)/repeat(2,1fr); */
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+    align-content: flex-end;
+}
 
 div.bp {
     background-image: url("../images/blackPawn.png");
