@@ -157,6 +157,34 @@ div.mv {
     opacity:0.5 ;
 }
 
+.hidden {
+    display: none;
+  }
+  
+  .alert-container {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+    animation: alertAnimation 0.3s ease-out;
+  }
+  
+  @keyframes alertAnimation {
+    0% {
+      opacity: 0;
+      transform: translate(-50%, -60%);
+    }
+    100% {
+      opacity: 1;
+      transform: translate(-50%, -50%);
+    }
+  }
+  
+
 
 /* div.take {
     background-color: rgba(255, 0, 0, 0.200);

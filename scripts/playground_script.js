@@ -76,4 +76,13 @@ function getQueryParams() {
   console.log(param1Value); // Output: Hello
   console.log(param2Value); // Output: World
 
+  function showAlert() {
+    var alertBox = document.getElementById('alertBox');
+    alertBox.classList.remove('hidden');
+  }
+  $('#alert').on('click',function() {
+    showAlert()
+  })
+  
+
 

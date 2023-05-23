@@ -46,6 +46,7 @@ class Timer {
       } else {
         clearInterval(this.countdown); // Clear the countdown interval when the timer reaches 0
         this.countdown = null;
+        game.endGame(this.selector.split('-')[1][0])
       }
     }
   }
@@ -66,9 +67,12 @@ const game = {
     whiteTimer : new Timer(),
     blackTimer : new Timer(),
 
-    start:function(timer) {
+    start:function(timer, random = false) {
         
-        chessBoard.gameInit()
+        if (!random) {
+            chessBoard.gameInit()
+        }
+        
 
         this.gameTimer = timer
 
@@ -108,8 +112,16 @@ const game = {
 
     },
 
-    endGame: function() {
-        
+    endGame: function(side) {
+        console.log(side);
+        const oppSide = this.side.oppSide[side]
+        $('div.alert').html(`Game Over!<br>Winner is ${this.side[oppSide]}`)
+        this.gameOver()
+    },
+
+    gameOver: function() {
+        let alertBox = document.getElementById('alertBox');
+        alertBox.classList.remove('hidden');
     },
     
     isStarted: true,
@@ -323,6 +335,8 @@ const game = {
     side:{
         white:'w',
         black:'b',
+        w:'White',
+        b:'Black',
         oppSide:{
             w:'b',
             b:'w'
