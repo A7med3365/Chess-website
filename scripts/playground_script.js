@@ -52,4 +52,28 @@ $('button#clear').on('click',function(){
 
 // chessBoard.clearEvents()
 
+function getQueryParams() {
+    var params = {};
+    var search = window.location.search.substring(1);
+    console.log(search);
+    var pairs = search.split('&');
+    console.log(pairs);
+    for (var i = 0; i < pairs.length; i++) {
+      var pair = pairs[i].split('=');
+      var key = decodeURIComponent(pair[0]);
+      var value = decodeURIComponent(pair[1] || '');
+      params[key] = value;
+    }
+    return params;
+  }
+
+  // Retrieve the values from the query parameters
+  var queryParams = getQueryParams();
+  var param1Value = queryParams.param1;
+  var param2Value = queryParams.param2;
+
+  // Use the values as needed
+  console.log(param1Value); // Output: Hello
+  console.log(param2Value); // Output: World
+
 

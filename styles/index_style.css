@@ -1,0 +1,140 @@
+body { 
+    background-color: #212121;
+    text-align: center;
+}
+
+div.main {
+    display: grid;
+    grid-template: repeat(1,1fr)/repeat(4,1fr);
+    margin-left: 200px;
+    margin-right: 200px;
+    /* height: 252px;
+    width: 936px; */
+}
+
+#secondary {
+    display: grid;
+    grid-template: repeat(1,1fr)/repeat(4,1fr);
+    height: 200px;
+    margin-top: 15px;
+    margin-left: 200px;
+    margin-right: 200px;
+}
+
+h1 {
+    font-family: 'Luckiest Guy', cursive;
+    color : #fff;
+    margin-top: 40px;
+    font-size: 100px;
+}
+
+#PlayGround {
+    grid-column: 3;
+    display: flex;
+    justify-self: center;
+    align-self: center;
+}
+
+#Standard {
+    grid-row: 1;
+    grid-column: 1;
+    display: flex;
+    justify-self: center;
+    align-self: center;
+}
+
+#broken {
+    grid-row: 1;
+    grid-column: 2;
+    display: flex;
+    justify-self: center;
+    align-self: center;
+}
+
+#vsAI {
+    grid-row: 1;
+    grid-column: 4;
+    display: flex;
+    justify-self: center;
+    align-self: center;
+}
+
+#standard-options {
+    grid-row: 1;
+    grid-column: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+    align-items: center;
+}
+
+#broken-options {
+    grid-row: 1;
+    grid-column: 2;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+    align-items: center;
+}
+
+#ai-options {
+    grid-row: 1;
+    grid-column: 4;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+    align-items: center;
+}
+
+
+button {
+    padding: 0.1em 0.25em;
+    width: 13em;
+    height: 4.2em;
+    background-color: #212121;
+    border: 0.08em solid #fff;
+    border-radius: 0.3em;
+    font-size: 12px;
+    color: #fff;
+  }
+  
+  button span {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    bottom: 0.4em;
+    width: 8.25em;
+    height: 2.5em;
+    background-color: #212121;
+    border-radius: 0.2em;
+    font-size: 1.5em;
+    color: #fff;
+    border: 0.08em solid #fff;
+    box-shadow: 0 0.4em 0.1em 0.019em #fff;
+  }
+  
+  button span:hover {
+    transition: all 0.5s;
+    transform: translate(0, 0.4em);
+    box-shadow: 0 0 0 0 #fff;
+  }
+  
+  button span:not(hover) {
+    transition: all 1s;
+  }
+
+  .hidden {
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s, visibility 0s linear 0.3s;
+  }
+
+  .visible {
+    opacity: 1;
+    visibility: visible;
+    transition: opacity 0.3s;
+    color:#fff;
+  }
+  
+  

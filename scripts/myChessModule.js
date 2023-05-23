@@ -66,11 +66,11 @@ const game = {
     whiteTimer : new Timer(),
     blackTimer : new Timer(),
 
-    start:function() {
+    start:function(timer) {
         
         chessBoard.gameInit()
 
-        
+        this.gameTimer = timer
 
         this.whiteTimer.seconds = this.gameTimer
         this.blackTimer.seconds = this.gameTimer
@@ -99,6 +99,12 @@ const game = {
 
         this[timer[side]].pause()
         this[timer[oppSide]].resume()
+
+        if (this.isCheck(oppSide)) {
+            let kingX = this.kingPos(oppSide).x
+            let kingY = this.kingPos(oppSide).y
+            $(`.pos-${kingY}${kingX}`).css({'background-color':'rgba(255, 0, 0, 0.300)'})            
+        }
 
     },
 
@@ -795,6 +801,7 @@ const chessBoard = {
      */
     clearMoves: function(){
         $('.mv').removeClass("mv").off('click') //clear the previous displayed moves
+        
         //console.log(1);
         const takeMoves = $('.take')
         
@@ -805,13 +812,7 @@ const chessBoard = {
             //console.log(pos);
             const takenPiece = $(this).attr('class').split(/\s+/)[1];
 
-            if (chessBoard.isDark(x,y)) {
-                $(this).css({'background-color':chessBoard.dark})
-                // $(this).removeClass("take").toggleClass('dark')
-            } else {
-                $(this).css({'background-color':chessBoard.light})
-                // $(this).removeClass("take").toggleClass('light')
-            }
+            chessBoard.resetColor(x,y)
             $(this).removeClass('take').off('click')
             chessBoard.addEvent(takenPiece,'.'+pos)
             
@@ -820,6 +821,19 @@ const chessBoard = {
 
         
         //chessBoard.addEventAll()
+    },
+
+    resetColor : function(x,y) {
+        console.log(`resetting color at ${y}${x} `);
+        if (chessBoard.isDark(x,y)) {
+            // console.log('dark');
+            $(`.pos-${y}${x}`).css({'background-color':chessBoard.dark})
+            // $(this).removeClass("take").toggleClass('dark')
+        } else {
+            // console.log('light');
+            $(`.pos-${y}${x}`).css({'background-color':chessBoard.light})
+            // $(this).removeClass("take").toggleClass('light')
+        }  
     },
 
 
@@ -935,9 +949,14 @@ const chessBoard = {
             chessBoard.removePiece(to,piece)
             chessBoard.addPiece(from,piece)
         } else if (game.isStarted) {
+            let kingX = game.kingPos(piece[0]).x
+            let kingY = game.kingPos(piece[0]).y
+            console.log(kingX,kingY);
+            this.resetColor(game.kingPos(piece[0]).x,game.kingPos(piece[0]).y)
             chessBoard.addPiece(to,piece)
             game.switchTurn(piece[0])
         } else {
+            this.resetColor(game.kingPos(piece[0]).x,game.kingPos(piece[0]).y)
             chessBoard.addPiece(to,piece)
         }
 

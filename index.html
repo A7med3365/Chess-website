@@ -7,13 +7,67 @@
     <script src="scripts/index_script.js" defer></script>
     <link rel="stylesheet" href="./styles/index_style.css">
     <script src="https://code.jquery.com/jquery-3.7.0.min.js" integrity="sha256-2Pmvv0kuTBOenSvLm6bvfBSSHrUJ+3A7x6P5Ebd07/g=" crossorigin="anonymous"></script>
-
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Luckiest+Guy&display=swap" rel="stylesheet">
     <title>Chess game</title>
 </head>
-<body>
-    <ul>
-        <li><a href="./pages/playground.html">playground</a></li>
-        <li><a href="./pages/2player.html">2 player</a></li>
-    </ul> 
+<body class="bg-dark">
+    
+    <h1>Chess</h1>
+    <div class="main">
+        
+        
+            <button id="PlayGround">
+                <a href="pages/playground.html">
+                <span>
+                    PlayGround
+                </span></a>
+            </button>
+       
+        
+        <button id="Standard" onclick="toggleButtonsStandard()">
+            <span>
+                standard Chess
+            </span>
+        </button>
+
+        <button id="broken" onclick="toggleButtonsBroken()">
+            <span>
+                Broken Chess
+            </span>
+        </button>
+
+        <button id="vsAI" onclick="toggleButtonsAI()">
+            <span>
+                Player vs AI
+            </span>
+        </button>
+    </div>
+
+    <div id="secondary">
+        <div id="standard-options" class="hidden">
+            <a href="pages/2player.html?timer=60"><button>Bullet - 1min</button></a>
+            <a href="pages/2player.html?timer=180"><button>Blitz  - 3min</button></a>
+            <a href="pages/2player.html?timer=600"><button>Rapid  -10min</button></a>
+          </div>
+
+          <div id="broken-options" class="hidden">
+            <a href="pages/brokenChess.html?timer=60"><button>Bullet - 1min</button></a>
+            <a href="pages/brokenChess.html?timer=180"><button>Blitz  - 3min</button></a>
+            <a href="pages/brokenChess.html?timer=600"><button>Rapid  -10min</button></a>
+          </div>
+
+          <div id="ai-options" class="hidden">
+            <button>coming soon...</button></a>
+          </div>
+
+
+    </div>
+   
+
+
+    
+
 </body>
 </html>
