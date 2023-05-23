@@ -93,7 +93,10 @@ const game = {
 
         chessBoard.clearEvents(side)
         chessBoard.addEventAll(oppSide)
+
+
         
+
         this[timer[side]].pause()
         this[timer[oppSide]].resume()
 
@@ -109,20 +112,28 @@ const game = {
     gameTimer : 600,
 
 
+    kingPos: function(side) {
+        const kingPos = chessBoard.getPos(`.${side}k`)
+        const [kingX, kingY] = chessBoard.getXY(kingPos)  
+        return {
+            x:kingX,
+            y:kingY
+        }
+    },
 
-    isCheck: function(side , x = 0  , y = 0) {
+    isCheck: function(side, x = this.kingPos(side).x , y = this.kingPos(side).y) {
 
         const oppSide = this.side.oppSide[side]
         
         // let checkAdj = []
 
-        if (x==0 && y==0) {
+        // if (typeof x !== 'undefined' && typeof y !== 'undefined') {
             
-            const kingPos = chessBoard.getPos(`.${side}k`)
-            const [x,y] = chessBoard.getXY(kingPos)            
-        }
+        //     const kingPos = chessBoard.getPos(`.${side}k`)
+        //     let [x,y] = chessBoard.getXY(kingPos)            
+        // }
         
-        // console.log(x,y); 
+        console.log(x,y); 
 
 
         //checks from queen, rooks and bishops
@@ -155,7 +166,7 @@ const game = {
                     //         'y': y+chessPiecesMoves[rollSide][1]
                     //     })
                     // console.log(checkAdj);
-
+                    console.log('qr');
                     return true
                 }  
             }
@@ -175,7 +186,7 @@ const game = {
                     //         'x': x+chessPiecesMoves[rollSide][0],
                     //         'y': y+chessPiecesMoves[rollSide][1]
                     //     })
-                    
+                    console.log('qb');
                     return true
                 }  
             }
@@ -198,8 +209,8 @@ const game = {
         // console.log(knightMoves);
         for (const position of knightMoves) {
             
-            if (chessBoard.isPiece(position.x,position.y,oppSide,'n')) { 
-                
+            if (chessBoard.isPiece(position.x,position.y,oppSide,'n') && chessBoard.isInside(position.x,position.y)) { 
+                console.log('n');
                 return true
                  
             }
@@ -226,7 +237,7 @@ const game = {
         for (const position of pawnMoves) {
             
             if (chessBoard.isPiece(position.x,position.y,oppSide,'p')) { 
-                
+                console.log('p');
                 return true
                  
             }
@@ -251,7 +262,7 @@ const game = {
         for (const position of kingMoves) {
             
             if (chessBoard.isPiece(position.x,position.y,oppSide,'k')) { 
-                
+                console.log('k');
                 return true
                  
             }
@@ -917,9 +928,17 @@ const chessBoard = {
 
         chessBoard.removePiece(from,piece)
         chessBoard.addPiece(to,piece)
-
-        if (game.isStarted) {
+    
+        console.log(piece[0]);
+        if (game.isCheck(piece[0])) {
+            console.log('check');
+            chessBoard.removePiece(to,piece)
+            chessBoard.addPiece(from,piece)
+        } else if (game.isStarted) {
+            chessBoard.addPiece(to,piece)
             game.switchTurn(piece[0])
+        } else {
+            chessBoard.addPiece(to,piece)
         }
 
         //chessBoard.addEvent(piece,to)//CHANGE
@@ -957,7 +976,7 @@ const chessBoard = {
 
     clearEvents: function(side = 'a') {
         
-        console.log(`clear ${side}`);
+        // console.log(`clear ${side}`);
 
         if (side == 'a') {
             for (let i = 8; i >= 1; i--) {
@@ -997,7 +1016,7 @@ const chessBoard = {
      */
     addEventAll : function(side = 'a') { 
 
-        console.log(`add ${side}`);
+        // console.log(`add ${side}`);
     
         if (side == 'a') {
             for (const piece of chessBoard.piecesTypes) {
@@ -1009,24 +1028,24 @@ const chessBoard = {
                 })
             }
         } else if (side == 'w') {
-            console.log('in w');
+            // console.log('in w');
             for (const piece of chessBoard.whitePieces) {
                 const pieces = $(`.${piece}`)
                 
                 pieces.each(function(index) {
                     const pos = $(this).attr('class').split(/\s+/)[0]
-                    console.log(pos,piece);
+                    // console.log(pos,piece);
                     chessBoard.addEvent(piece,'.'+pos)
                 })
             }
         } else if (side == 'b') {
-            console.log('in b');
+            // console.log('in b');
             for (const piece of chessBoard.blackPieces) {
                 const pieces = $(`.${piece}`)
                 // console.log(piece);
                 pieces.each(function(index) {
                     const pos = $(this).attr('class').split(/\s+/)[0]
-                    console.log(pos,piece);
+                    // console.log(pos,piece);
                     chessBoard.addEvent(piece,'.'+pos)
                 })
             }
