@@ -1,6 +1,6 @@
 
 class Timer {
-    
+
     constructor() {
       this.countdown = null;
       this.seconds = 0;
@@ -79,7 +79,7 @@ const game = {
             chessBoard.gameInit()
         }
         
-
+        this.isStarted = true
         this.gameTimer = timer
 
         this.whiteTimer.seconds = this.gameTimer
@@ -130,7 +130,7 @@ const game = {
         alertBox.classList.remove('hidden');
     },
     
-    isStarted: true,
+    isStarted: false,
     isOver: false,
 
     gameTimer : 600,
