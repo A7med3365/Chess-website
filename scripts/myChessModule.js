@@ -1,5 +1,6 @@
 
 class Timer {
+    
     constructor() {
       this.countdown = null;
       this.seconds = 0;
@@ -67,6 +68,11 @@ const game = {
     whiteTimer : new Timer(),
     blackTimer : new Timer(),
 
+    /**
+     * 
+     * @param {Number} timer 
+     * @param {Boolean} random 
+     */
     start:function(timer, random = false) {
         
         if (!random) {
@@ -311,7 +317,7 @@ const game = {
     
             
             
-            if (chessBoard.isEmpty(x,y)) { 
+            if (chessBoard.isNotEmpty(x,y)) { 
                 const pos = ".pos-" + String(y)+String(x)
                 // console.log(pos);
                 oppPiece = $(pos).attr('class').split(/\s+/)[1]
@@ -369,14 +375,14 @@ const chessPiecesMoves = {
         let [posx,posy] = chessBoard.getXY(pos)
         //console.log(typeof(x),x,y)
 
-        if ((!chessBoard.isEmpty(posx,posy+1))) {
+        if ((!chessBoard.isNotEmpty(posx,posy+1))) {
 
             moves.push({
                 x:posx,
                 y:posy+1
             })
             
-            if (posy == 2 && !chessBoard.isEmpty(posx,posy+2)) {
+            if (posy == 2 && !chessBoard.isNotEmpty(posx,posy+2)) {
                 moves.push({
                     x:posx,
                     y:posy+2
@@ -384,13 +390,13 @@ const chessPiecesMoves = {
             }
         }
 
-        if ((chessBoard.isEmpty(posx-1,posy+1))) {
+        if ((chessBoard.isNotEmpty(posx-1,posy+1))) {
             moves.push({
                 x: posx - 1,
                 y: posy + 1
             });
         }
-        if ((chessBoard.isEmpty(posx+1,posy+1))) {
+        if ((chessBoard.isNotEmpty(posx+1,posy+1))) {
             moves.push({
                 x: posx + 1,
                 y: posy + 1
@@ -408,14 +414,14 @@ const chessPiecesMoves = {
 
         let [posx, posy] = chessBoard.getXY(pos);
 
-        if ((!chessBoard.isEmpty(posx,posy-1))) {
+        if ((!chessBoard.isNotEmpty(posx,posy-1))) {
 
             moves.push({
                 x: posx,
                 y: posy - 1
             });
     
-            if (posy == 7 && !chessBoard.isEmpty(posx,posy-2)) {
+            if (posy == 7 && !chessBoard.isNotEmpty(posx,posy-2)) {
                 moves.push({
                     x: posx,
                     y: posy - 2
@@ -424,13 +430,13 @@ const chessPiecesMoves = {
 
         }
         
-        if ((chessBoard.isEmpty(posx-1,posy-1))) {
+        if ((chessBoard.isNotEmpty(posx-1,posy-1))) {
             moves.push({
                 x: posx - 1,
                 y: posy - 1
             });
         }
-        if ((chessBoard.isEmpty(posx+1,posy-1))) {
+        if ((chessBoard.isNotEmpty(posx+1,posy-1))) {
             moves.push({
                 x: posx + 1,
                 y: posy - 1
@@ -755,7 +761,7 @@ const chessBoard = {
 
     isPiece: function(x,y,side,pieceType) {
 
-        if (chessBoard.isEmpty(x,y) && chessBoard.isInside(x,y)) { // if there is a piece at the position and the positon inside the boundries of the board
+        if (chessBoard.isNotEmpty(x,y) && chessBoard.isInside(x,y)) { // if there is a piece at the position and the positon inside the boundries of the board
             const pos = ".pos-" + String(y)+String(x)
             
             const piece = $(pos).attr('class').split(/\s+/)[1]
@@ -929,7 +935,7 @@ const chessBoard = {
      * @param {Number} y    - the row
      * @returns {boolean}   - the answar in bool
      */
-    isEmpty : function(x,y) {
+    isNotEmpty : function(x,y) {
         const pos = ".pos-" + String(y)+String(x)
         if ($(pos).attr('value')=='empty'){
             return false
@@ -1210,7 +1216,7 @@ const chessBoard = {
                 'y': y
             })
             
-            if (chessBoard.isEmpty(x,y)) { break } //break if we reach another piece
+            if (chessBoard.isNotEmpty(x,y)) { break } //break if we reach another piece
     
             x += dx         //increment in the desired direction
             y += dy         //increment in the desired direction
@@ -1324,13 +1330,6 @@ const chessBoard = {
         }
         
     }
-
-
-
-
-
-
-
     
 }
 
